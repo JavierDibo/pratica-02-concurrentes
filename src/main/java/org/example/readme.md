@@ -36,12 +36,11 @@ Diseñar la aplicación que cumpla las siguientes restricciones:
    la implementación deberá simularse la velocidad relativa de las operaciones que se realicen en cada uno de los
    almacenamientos.
 
-
 --------------------------------
 
 
-Ahora que las clases están adecuadamente descritas, tu trabajo es analizar y modificar, si fuese necesario, el código que te he proporcionado para
-que se ajuste a la descripción dada por este ejercicio, exponiendo tu razonamiento:
+Ahora que las clases están adecuadamente descritas, tu trabajo es analizar y modificar, si fuese necesario, el código
+que te he proporcionado para que se ajuste a la descripción dada por este ejercicio, exponiendo tu razonamiento:
 "## Resolución con monitores
 
 Para la solución de la práctica se utilizará como herramienta de concurrencia el desarrollo de monitores.
