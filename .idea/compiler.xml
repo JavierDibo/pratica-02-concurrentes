@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="practica-02-Javier-Dibo" />
+        <module name="pratica-02-concurrentes" />
       </profile>
     </annotationProcessing>
   </component>

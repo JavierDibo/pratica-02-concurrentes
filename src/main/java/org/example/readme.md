@@ -1,4 +1,8 @@
-## Resolución con monitores
+-------------
+# ENUNCIADO #
+-------------
+
+## Ejercicio - Resolucion obligatoria con monitores
 
 Para la solución de la práctica se utilizará como herramienta de concurrencia el desarrollo de monitores.
 Hay que tener presenta a la hora de implementar la solución que Java no dispone de esta herramienta.
@@ -36,7 +40,71 @@ Diseñar la aplicación que cumpla las siguientes restricciones:
    la implementación deberá simularse la velocidad relativa de las operaciones que se realicen en cada uno de los
    almacenamientos.
 
--------------------------------
+---------------
+# MI ANALISIS #
+---------------
+
+## Requerimientos:
+
+1. El sistema debe admitir múltiples trabajos de impresión y almacenarlos en una cola.
+2. El sistema debe ser capaz de manejar múltiples impresoras que procesan trabajos de impresión simultáneamente.
+3. Los trabajos de impresión deben procesarse en función de su orden de llegada.
+4. El sistema debe poder simular la impresión de un trabajo con diferentes tiempos de espera según la ubicación del
+   trabajo (almacenamiento primario o secundario).
+
+## Análisis:
+
+Para cumplir con estos requisitos, se puede dividir el sistema en las siguientes clases y componentes:
+
+1. Clase PrintJob: Esta clase representa un trabajo de impresión individual. Contiene información sobre el documento que
+   se va a imprimir, un identificador único y el orden de llegada del trabajo. La clase tiene métodos para obtener
+   información sobre el trabajo y un método toString() para facilitar la visualización del trabajo de impresión.
+
+2. Clase MonitorImpresora: esta clase se encarga de gestionar los trabajos de impresión y coordinar las impresoras.
+   Utiliza dos colas para almacenar trabajos de impresión: un almacenamiento primario de tamaño fijo y un almacenamiento
+   secundario ilimitado. Los trabajos se almacenan en el almacenamiento primario hasta que se llena, y luego se
+   almacenan en el secundario. La clase también utiliza un ReentrantReadWriteLock para garantizar la seguridad de los
+   hilos al acceder a las colas. La clase tiene métodos para agregar trabajos de impresión y recuperar el siguiente
+   trabajo de impresión en función del orden de llegada y del almacenamiento en el que se encuentran. Además, tiene un
+   método para simular la impresión de un trabajo de impresión con diferentes tiempos de espera según la ubicación del
+   trabajo (almacenamiento primario o secundario).
+
+3. Clase Main: Esta clase es el punto de entrada del programa y se encarga de la creación y envío de trabajos de
+   impresión al MonitorImpresora. Utiliza un ExecutorService con un número fijo de hilos para simular múltiples
+   impresoras que procesan trabajos de impresión simultáneamente. Después de que todos los trabajos de impresión han
+   sido procesados, cierra el ExecutorService.
+
+4. Clase interna PrinterRunnable: Esta clase implementa la interfaz Runnable y es utilizada por los hilos en el
+   ExecutorService para procesar trabajos de impresión. La clase obtiene el siguiente trabajo de impresión del
+   MonitorImpresora, simula la impresión del trabajo y actualiza el CountDownLatch.
+
+## Variables compartidas y mecanismos de sincronización:
+
+* Variables compartidas:
+
+    1. almacenamientoPrimario: Una cola que representa el almacenamiento primario rápido y de capacidad limitada.
+    2. almacenamientoSecundario: Una cola que representa el almacenamiento secundario más lento pero de capacidad
+       ilimitada.
+    3. readWriteLock: Un objeto ReentrantReadWriteLock para garantizar la seguridad de los hilos al acceder a las colas.
+* Mecanismos de sincronización:
+  1. Los métodos agregarTrabajo y obtenerSiguienteTrabajo en la clase MonitorImpresora utilizan el ReentrantReadWriteLock para sincronizar el acceso a las colas de almacenamiento. Esto garantiza que múltiples hilos puedan leer de las colas simultáneamente, pero sólo un hilo puede escribir en ellas al mismo tiempo.
+  2. La clase MonitorImpresora utiliza synchronized, wait() y notify() (o notifyAll() si es necesario) para coordinar el acceso a las colas de almacenamiento primario y secundario, garantizando que los trabajos se procesen en función de su orden de llegada y del almacenamiento en el que se encuentran.
+  3. En lugar de tener un contador de trabajos de impresión pendientes, se utilizará un CountDownLatch para controlar cuándo todos los trabajos de impresión han sido procesados y, así, cerrar el ExecutorService de manera ordenada.
+
+### Interacciones y relaciones entre las clases y componentes:
+
+* La clase Main crea y envía trabajos de impresión al MonitorImpresora. Además, crea y controla el ExecutorService
+  que utiliza la clase PrinterRunnable para procesar los trabajos de impresión.
+* La clase MonitorImpresora es el componente central que coordina la gestión de los trabajos de impresión, garantiza la
+  sincronización adecuada entre los hilos y controla el acceso a los almacenamientos primario y secundario.
+* La clase PrintJob representa un trabajo de impresión individual y contiene la información necesaria para procesar el
+  trabajo de impresión.
+* La clase PrinterRunnable es utilizada por los hilos en el ExecutorService para procesar trabajos de impresión en
+  paralelo. Interactúa con la clase MonitorImpresora para obtener y procesar trabajos de impresión.
+
+----------------------
+# COSAS DEL PROFESOR #
+----------------------
 
 ### Constantes
 
@@ -259,3 +327,6 @@ while ( Hasta ser interrumpido ) {
 	exm.signal()
 }
 ``` 
+
+---
+

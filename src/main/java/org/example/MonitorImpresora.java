@@ -1,58 +1,49 @@
 package org.example;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.ReadWriteLock;
+import java.util.LinkedList;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MonitorImpresora {
-    private final LinkedBlockingQueue<PrintJob> primaryStorage = new LinkedBlockingQueue<>(5);
-    private final LinkedBlockingQueue<PrintJob> secondaryStorage = new LinkedBlockingQueue<>();
-    private final ReadWriteLock storageLock = new ReentrantReadWriteLock();
+    private final LinkedList<PrintJob> primaryStorage = new LinkedList<>();
+    private final LinkedList<PrintJob> secondaryStorage = new LinkedList<>();
+    private final ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock();
     private static final int PRIMARY_STORAGE_DELAY = 100;
     private static final int SECONDARY_STORAGE_DELAY = 500;
+    private final CountDownLatch latch;
 
-    public void addPrintJob(PrintJob job) {
-        storageLock.writeLock().lock();
-        try {
-            if (!primaryStorage.offer(job)) {
-                secondaryStorage.offer(job);
-            }
-        } finally {
-            storageLock.writeLock().unlock();
+    public MonitorImpresora(int numPrintJobs) {
+        this.latch = new CountDownLatch(numPrintJobs);
+    }
+
+    public synchronized void addPrintJob(PrintJob job) {
+        if (primaryStorage.size() < 5) {
+            primaryStorage.offer(job);
+        } else {
+            secondaryStorage.offer(job);
         }
     }
 
-    public PrintJob getNextPrintJob() {
-        PrintJob primaryJob = null;
-        PrintJob secondaryJob = null;
-
-        storageLock.readLock().lock();
-        try {
-            primaryJob = primaryStorage.poll();
-            if (secondaryStorage.size() > 0) {
-                secondaryJob = secondaryStorage.poll();
-            }
-
-            if (primaryJob != null) {
-                if (secondaryJob == null || primaryJob.getArrivalOrder() < secondaryJob.getArrivalOrder()) {
-                    if (secondaryJob != null) {
-                        secondaryStorage.offer(secondaryJob);
-                    }
-                    return primaryJob;
-                }
-                primaryStorage.offer(primaryJob);
-            } else if (secondaryJob != null) {
-                return secondaryJob;
-            }
-        } finally {
-            storageLock.readLock().unlock();
+    public synchronized PrintJob getNextPrintJob() {
+        PrintJob job = null;
+        if (!primaryStorage.isEmpty()) {
+            job = primaryStorage.poll();
+        } else if (!secondaryStorage.isEmpty()) {
+            job = secondaryStorage.poll();
         }
-
-        return null;
+        return job;
     }
 
     public void simulatePrintJob(PrintJob job) throws InterruptedException {
         long waitTime = primaryStorage.contains(job) ? PRIMARY_STORAGE_DELAY : SECONDARY_STORAGE_DELAY;
         Thread.sleep(waitTime);
+    }
+
+    public void jobCompleted() {
+        latch.countDown();
+    }
+
+    public void awaitCompletion() throws InterruptedException {
+        latch.await();
     }
 }
