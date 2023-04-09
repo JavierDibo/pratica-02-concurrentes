@@ -32,7 +32,6 @@ public class Main {
         System.out.println("Finaliza la ejecución del hilo (PRINCIPAL)");
     }
 
-
     private static class PrinterRunnable implements Runnable {
         private final MonitorImpresora monitorImpresora;
 
