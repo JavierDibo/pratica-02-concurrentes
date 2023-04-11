@@ -12,12 +12,12 @@ public class Impresora implements Runnable {
     @Override
     public void run() {
         while (monitorImpresora.getCompletados().get() < numImpresiones) {
-            Pair<String, TrabajoImpresora> jobPair = monitorImpresora.siguienteTrabajo();
-            if (jobPair != null) {
-                TrabajoImpresora job = jobPair.getValue();
+            Pair<String, TrabajoImpresora> trabajo = monitorImpresora.siguienteTrabajo();
+            if (trabajo != null) {
+                TrabajoImpresora job = trabajo.getValue();
                 System.out.println("Imprimiendo: " + job );
                 try {
-                    monitorImpresora.imprimir(jobPair);
+                    monitorImpresora.imprimir(trabajo);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

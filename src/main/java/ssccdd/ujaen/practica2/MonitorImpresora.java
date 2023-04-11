@@ -16,8 +16,6 @@ public class MonitorImpresora {
     private final ReentrantLock lockSecundario = new ReentrantLock();
     private final Condition primarioNoVacio = lockPrimario.newCondition();
     private final Condition secundarioNoVacio = lockSecundario.newCondition();
-    private static final int DELAY_PRIMARIO = 1000;
-    private static final int DELAY_SECUNDARIO = 5000;
     private final CountDownLatch latch;
     private final AtomicInteger completados = new AtomicInteger(0);
 
@@ -26,7 +24,7 @@ public class MonitorImpresora {
     }
 
     public void annadirTrabajo(TrabajoImpresora job) {
-        if (primario.size() < 5) {
+        if (primario.size() < TAMANNO_PRIMARIO) {
             lockPrimario.lock();
             try {
                 primario.offer(job);
@@ -94,4 +92,9 @@ public class MonitorImpresora {
     public AtomicInteger getCompletados() {
         return completados;
     }
+
+    private static final int DELAY_PRIMARIO = 1000;
+    private static final int DELAY_SECUNDARIO = 5000;
+
+    private static final int TAMANNO_PRIMARIO = 5;
 }
