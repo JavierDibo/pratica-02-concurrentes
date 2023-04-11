@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
  */
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Comienza la ejecución del hilo (PRINCIPAL)");
+        System.out.println("Comienza la impresion");
 
         int numHojas = 10;
         int numImpresoras = 2;
@@ -16,7 +16,8 @@ public class Main {
         MonitorImpresora monitorImpresora = new MonitorImpresora(numHojas);
 
         for (int i = 0; i < numHojas; i++) {
-            TrabajoImpresora job = new TrabajoImpresora("Hoja " + (i + 1), i + 1, i);
+            String nombre = TrabajoImpresora.nombresDeCuentos(i + 1);
+            TrabajoImpresora job = new TrabajoImpresora(nombre, i + 1, i);
             monitorImpresora.annadirTrabajo(job);
         }
 
@@ -33,6 +34,6 @@ public class Main {
 
         executorService.shutdown();
 
-        System.out.println("Finaliza la ejecución del hilo (PRINCIPAL)");
+        System.out.println("Se ha impreso todo");
     }
 }
