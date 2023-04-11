@@ -30,7 +30,7 @@ public class TrabajoImpresora {
     public String toString() {
         return "TrabajoImpresora(" +
                 "nombre='" + hoja + '\'' +
-                ", jobId=" + id +
+                ", id=" + id +
                 ')';
     }
 }
