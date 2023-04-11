@@ -10,8 +10,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Comienza la ejecución del hilo (PRINCIPAL)");
 
-        int numHojas = 20;
-        int numImpresoras = 1;
+        int numHojas = 10;
+        int numImpresoras = 2;
 
         MonitorImpresora monitorImpresora = new MonitorImpresora(numHojas);
 
