@@ -10,14 +10,14 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Comienza la impresion");
 
-        int numHojas = 10;
-        int numImpresoras = 2;
+        int numHojas = 40;
+        int numImpresoras = 3;
 
         MonitorImpresora monitorImpresora = new MonitorImpresora(numHojas);
 
         for (int i = 0; i < numHojas; i++) {
-            String nombre = TrabajoImpresora.nombresDeCuentos(i + 1);
-            TrabajoImpresora job = new TrabajoImpresora(nombre, i + 1, i);
+            String nombre = TrabajoImpresora.generaNombres();
+            TrabajoImpresora job = new TrabajoImpresora(nombre, i, i);
             monitorImpresora.annadirTrabajo(job);
         }
 

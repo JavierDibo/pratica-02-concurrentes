@@ -6,12 +6,12 @@ public class Impresora implements Runnable {
     private final MonitorImpresora monitorImpresora;
     private final int numImpresiones;
     private final int id;
-    private static AtomicInteger idGenerator = new AtomicInteger(0);
+    private static final AtomicInteger generador = new AtomicInteger(0);
 
     public Impresora(MonitorImpresora monitorImpresora, int numImpresiones) {
         this.monitorImpresora = monitorImpresora;
         this.numImpresiones = numImpresiones;
-        this.id = idGenerator.incrementAndGet();
+        this.id = generador.incrementAndGet();
     }
     public int getId() {
         return id;
@@ -23,13 +23,13 @@ public class Impresora implements Runnable {
             Pair<String, TrabajoImpresora> trabajo = monitorImpresora.siguienteTrabajo();
             if (trabajo != null) {
                 TrabajoImpresora job = trabajo.getValue();
-                System.out.println("Impresora " + id + " - Imprimiendo: " + job);
+                System.out.println("Impresora " + id + ": Imprimiendo - " + job);
                 try {
                     monitorImpresora.imprimir(trabajo);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Impresora " + id + " - Fin: " + job);
+                System.out.println("Impresora " + id + ": Fin - " + job);
                 monitorImpresora.completado();
             }
         }
