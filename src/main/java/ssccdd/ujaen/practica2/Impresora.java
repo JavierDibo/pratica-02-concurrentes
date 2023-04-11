@@ -1,4 +1,5 @@
 package ssccdd.ujaen.practica2;
+
 public class Impresora implements Runnable {
     private final MonitorImpresora monitorImpresora;
     private final int numImpresiones;
@@ -11,15 +12,16 @@ public class Impresora implements Runnable {
     @Override
     public void run() {
         while (monitorImpresora.getCompletados().get() < numImpresiones) {
-            ImpresoraJob job = monitorImpresora.siguienteTrabajo();
-            if (job != null) {
-                System.out.println("Imprimiendo: " + job);
+            Pair<String, TrabajoImpresora> jobPair = monitorImpresora.siguienteTrabajo();
+            if (jobPair != null) {
+                TrabajoImpresora job = jobPair.getValue();
+                System.out.println("Imprimiendo: " + job );
                 try {
-                    monitorImpresora.imprimir(job);
+                    monitorImpresora.imprimir(jobPair);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Impresión finalizada: " + job);
+                System.out.println("Fin: " + job);
                 monitorImpresora.completado();
             }
         }

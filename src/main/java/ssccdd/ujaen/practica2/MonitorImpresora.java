@@ -10,14 +10,14 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Javier Francisco Dibo Gómez
  */
 public class MonitorImpresora {
-    private final LinkedList<ImpresoraJob> primario = new LinkedList<>();
-    private final LinkedList<ImpresoraJob> secundario = new LinkedList<>();
+    private final LinkedList<TrabajoImpresora> primario = new LinkedList<>();
+    private final LinkedList<TrabajoImpresora> secundario = new LinkedList<>();
     private final ReentrantLock lockPrimario = new ReentrantLock();
     private final ReentrantLock lockSecundario = new ReentrantLock();
     private final Condition primarioNoVacio = lockPrimario.newCondition();
     private final Condition secundarioNoVacio = lockSecundario.newCondition();
-    private static final int DELAY_PRIMARIO = 100;
-    private static final int DELAY_SECUNDARIO = 500;
+    private static final int DELAY_PRIMARIO = 1000;
+    private static final int DELAY_SECUNDARIO = 5000;
     private final CountDownLatch latch;
     private final AtomicInteger completados = new AtomicInteger(0);
 
@@ -25,7 +25,7 @@ public class MonitorImpresora {
         this.latch = new CountDownLatch(num);
     }
 
-    public void annadirTrabajo(ImpresoraJob job) {
+    public void annadirTrabajo(TrabajoImpresora job) {
         if (primario.size() < 5) {
             lockPrimario.lock();
             try {
@@ -45,36 +45,39 @@ public class MonitorImpresora {
         }
     }
 
-    public ImpresoraJob siguienteTrabajo() {
-        ImpresoraJob job = null;
+    public Pair<String, TrabajoImpresora> siguienteTrabajo() {
+        Pair<String, TrabajoImpresora> result = null;
 
         lockPrimario.lock();
         try {
             if (!primario.isEmpty()) {
-                job = primario.poll();
+                TrabajoImpresora job = primario.poll();
+                result = new Pair<>("primario", job);
             }
         } finally {
             lockPrimario.unlock();
         }
 
-        if (job == null) {
+        if (result == null) {
             lockSecundario.lock();
             try {
                 if (!secundario.isEmpty()) {
-                    job = secundario.poll();
+                    TrabajoImpresora job = secundario.poll();
+                    result = new Pair<>("secundario", job);
                 }
             } finally {
                 lockSecundario.unlock();
             }
         }
 
-        return job;
+        return result;
     }
 
-    public void imprimir(ImpresoraJob job) throws InterruptedException {
-        if (primario.contains(job)) {
+    public void imprimir(Pair<String, TrabajoImpresora> jobPair) throws InterruptedException {
+        String tipo = jobPair.getKey();
+        if ("primario".equals(tipo)) {
             Thread.sleep(DELAY_PRIMARIO);
-        } else if (secundario.contains(job)) {
+        } else if ("secundario".equals(tipo)) {
             Thread.sleep(DELAY_SECUNDARIO);
         }
     }

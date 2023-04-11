@@ -3,14 +3,14 @@ package ssccdd.ujaen.practica2;
 /**
  * @author Javier Francisco Dibo Gómez
  */
-public class ImpresoraJob {
+public class TrabajoImpresora {
     private final String hoja;
-    private final int jobId;
+    private final int id;
     private final int ordenLlegada;
 
-    public ImpresoraJob(String hoja, int jobId, int ordenLlegada) {
+    public TrabajoImpresora(String hoja, int id, int ordenLlegada) {
         this.hoja = hoja;
-        this.jobId = jobId;
+        this.id = id;
         this.ordenLlegada = ordenLlegada;
     }
 
@@ -18,8 +18,8 @@ public class ImpresoraJob {
         return hoja;
     }
 
-    public int getJobId() {
-        return jobId;
+    public int getId() {
+        return id;
     }
 
     public int getOrdenLlegada() {
@@ -28,9 +28,9 @@ public class ImpresoraJob {
 
     @Override
     public String toString() {
-        return "ImpresoraJob{" +
+        return "TrabajoImpresora(" +
                 "nombre='" + hoja + '\'' +
-                ", jobId=" + jobId +
-                '}';
+                ", jobId=" + id +
+                ')';
     }
 }
