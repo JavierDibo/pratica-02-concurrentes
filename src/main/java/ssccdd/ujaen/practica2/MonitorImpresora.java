@@ -2,6 +2,7 @@ package ssccdd.ujaen.practica2;
 
 import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -74,9 +75,9 @@ public class MonitorImpresora {
     public void imprimir(Pair<String, TrabajoImpresora> jobPair) throws InterruptedException {
         String tipo = jobPair.getKey();
         if ("primario".equals(tipo)) {
-            Thread.sleep(DELAY_PRIMARIO);
+            TimeUnit.SECONDS.sleep(DELAY_PRIMARIO);
         } else if ("secundario".equals(tipo)) {
-            Thread.sleep(DELAY_SECUNDARIO);
+            TimeUnit.SECONDS.sleep(DELAY_SECUNDARIO);
         }
     }
 
@@ -93,7 +94,7 @@ public class MonitorImpresora {
         return completados;
     }
 
-    private static final int DELAY_PRIMARIO = 1000;
-    private static final int DELAY_SECUNDARIO = 5000;
+    private static final int DELAY_PRIMARIO = 1;
+    private static final int DELAY_SECUNDARIO = 5;
     private static final int TAMANNO_PRIMARIO = 5;
 }
