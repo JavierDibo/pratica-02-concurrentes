@@ -36,13 +36,25 @@ public class TrabajoImpresora {
                 "Viaje al centro de la lavadora",
                 "El ataque de los tomates mutantes",
                 "Como domesticar a tu dragon de compañia",
-                "El dia que los lapices de colores tomaron el control"
+                "El dia que los lapices de colores tomaron el control",
+                "La odisea del calcetín perdido",
+                "El gato con botas y pantalones",
+                "El abecedario de las frutas ninja",
+                "El club secreto de las plantas carnívoras",
+                "La rebelión de las letras minúsculas",
+                "La liga de los superheroes vegetarianos",
+                "La vida secreta de los objetos inanimados",
+                "El elefante que aprendió a bailar ballet",
+                "La invasión de las hormigas gigantes",
+                "El diario de un zombie optimista",
+                "El misterioso caso del queso desaparecido"
         };
 
         Random random = new Random();
         int indice = random.nextInt(nombres.length);
         return nombres[indice];
     }
+
 
     @Override
     public String toString() {
